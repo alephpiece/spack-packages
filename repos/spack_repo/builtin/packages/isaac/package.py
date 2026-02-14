@@ -20,6 +20,7 @@ class Isaac(CMakePackage):
 
     version("develop", branch="dev")
     version("master", branch="master")
+    version('1.6.0', sha256='6b70d145c7499bb3a39c6f2da028dbaf02aafc202dc8d2155f0ef405dbb74a89')
     version("1.5.2", sha256="9cedd72bea06f387b697b17a0db076e50fb3b85b74f21d3a6d99ed0d664a9ef2")
     version("1.5.1", sha256="f62d53aa6e1c28e51437dbf3d1ac0daa2f98d28660f09feaabcc953ff01b076e")
     version("1.5.0", sha256="4d5a150dfe064289d760da368102172f84e9e8851a177c8125a56e151db58dce")
@@ -29,20 +30,25 @@ class Isaac(CMakePackage):
     version("1.3.1", sha256="7dead8f3d5467cbd2cde8187e7b860a4ab7796348895d18291f97a76e28757cf")
     version("1.3.0", sha256="fcf10f4738e7790ef6604e1e2cdd052a129ba4e53a439deaafa9fb2a70585574")
 
-    variant("cuda", default=True, description="Generate CUDA kernels for Nvidia GPUs")
-    # variant('alpaka', default=False,
-    #         description='Generate kernels via Alpaka, for CPUs or GPUs')
+    variant("cuda", default=True, description="Generate CUDA kernels for Nvidia GPUs", when='@:1.5.2')
+    variant('alpaka', default=False,
+            description='Generate kernels via Alpaka, for CPUs or GPUs',
+            when='@1.6.0:')
 
+    depends_on("c", type="build")
     depends_on("cxx", type="build")  # generated
 
-    depends_on("cmake@3.3:", type="build")
+    depends_on('cmake@3.3:', type='build', when='@:1.5.2')
+    depends_on('cmake@3.15:', type='build')
     depends_on("jpeg", type="link")
     depends_on("jansson", type="link")
     depends_on("boost@1.56.0:", type="link")
     depends_on("boost@1.65.1:", type="link", when="^cuda@9:")
-    depends_on("cuda@7.0:", type="link", when="+cuda")
-    # depends_on('alpaka@0.3', when='+alpaka')
+    depends_on("cuda@7.0:", type="link", when="@:1.5.2 +cuda")
+    depends_on('alpaka@2.0.0:', when='@1.6.0: +alpaka')
     depends_on("icet", type="link")
     depends_on("mpi", type="link")
+    depends_on('glm@0.9.9.8', type='link', when='@1.6.0')
+    depends_on('glm@develop', type='link', when='@develop')
 
     root_cmakelists_dir = "lib"

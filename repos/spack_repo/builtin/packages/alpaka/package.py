@@ -21,6 +21,7 @@ class Alpaka(CMakePackage, CudaPackage):
     license("MPL-2.0-no-copyleft-exception")
 
     version("develop", branch="develop")
+    version("2.1.1", sha256="2d30a43594c55067297947b0ec83300e4f2899497464c5cc6f142c823f3ea1b2")
     version("1.2.0", sha256="069ea68ac950b17cffb3a3e790973aa5115f07ab23c0247a167e815b3c6e6fa2")
     version("1.1.0", sha256="95a8f1b706105d8a213116b6ba00e27bd904855c377f5a22a04aa0b86054dc35")
     version("1.0.0", sha256="38223dc1ca5bcf3916ff91f8825fb8caab7047430877222847e0ceb93bffecc9")
@@ -50,8 +51,20 @@ class Alpaka(CMakePackage, CudaPackage):
 
     depends_on("boost@1.74:")
 
-    depends_on("cmake@3.18:")
-    depends_on("cmake@3.22:", when="@1:")
+    depends_on("cmake@3.18:", when="@:0")
+    depends_on("cmake@3.22:", when="@1:1")
+    depends_on("cmake@3.25:", when="@2:")
+
+    depends_on("tbb@2021.4.0.0:", when="backend=tbb")
+    depends_on("cuda", when="backend=cuda")
+    depends_on("cuda", when="backend=cuda_only")
+    depends_on("hip", when="backend=hip")
+    depends_on("hip", when="backend=hip_only")
+    # alpaka enables vendor RNG by default; HIP backend then requires both.
+    depends_on("rocrand", when="backend=hip")
+    depends_on("hiprand", when="backend=hip")
+    depends_on("rocrand", when="backend=hip_only")
+    depends_on("hiprand", when="backend=hip_only")
 
     # make sure no other backend is enabled if using cuda_only or hip_only
     for v in ("serial", "threads", "tbb", "omp2_gridblock", "omp2_blockthread", "cuda", "hip"):
