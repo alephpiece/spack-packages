@@ -145,5 +145,4 @@ class Rmgdft(CMakePackage, CudaPackage, ROCmPackage):
                     install("rmg-on-cpu", prefix.bin)
 
         # install tests
-        with working_dir(self.build_directory):
-            install_tree("tests/RMG", prefix.share.tests.RMG)
+        install_tree(join_path(self.stage.source_path, "tests", "RMG"), prefix.share.tests.RMG)
