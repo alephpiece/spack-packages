@@ -26,6 +26,7 @@ class KokkosKernels(CMakePackage, CudaPackage):
 
     version("develop", branch="develop")
 
+    version("5.2.0", sha256="57f278e7a25940f9a1237d8b370a1de7f09ea282626b4594e4880042181acdcd")
     version("5.1.1", sha256="4415c2a6e14e2bba9aa978917d2ffbcbe32760d3aba3a33bf7a267d50e7e20c9")
     version("5.1.0", sha256="c003cd53126dee651f41a3b003e443950c3030246785ae968055ce015c89e0d5")
     version("5.0.2", sha256="7c7af2c3659ecc620cc7b7016876330d9f288e8c6fd7b70b70907687df823b43")
@@ -240,5 +241,13 @@ class KokkosKernels(CMakePackage, CudaPackage):
             options.append(self.define(f"KokkosKernels_INST_{val.upper()}", True))
         layout_value = spec.variants["layouts"].value
         options.append(self.define(f"KokkosKernels_INST_LAYOUT{layout_value.upper()}", True))
+
+        # kokkos_launch_compiler strips the Spack compiler wrapper on TUs
+        # tagged -DKOKKOS_DEPENDENCE, which loses SPACK_CXXFLAGS injected by
+        # the wrapper. Route the spec's cxxflags through CMAKE_CXX_FLAGS so
+        # they live in the command CMake assembles and survive forwarding.
+        cxxflags = spec.compiler_flags["cxxflags"]
+        if cxxflags:
+            options.append(self.define("CMAKE_CXX_FLAGS", " ".join(cxxflags)))
 
         return options
