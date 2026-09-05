@@ -41,8 +41,6 @@ class Rmgdft(CMakePackage, CudaPackage, ROCmPackage):
 
     variant("local_orbitals", default=True, description="Build O(N) variant.")
 
-    variant("rocm", default=False, description="Build rocm enabled variant.")
-
     # Normally we want this but some compilers (e.g. IBM) are
     # very slow when this is on so provide the option to disable
     variant(
@@ -76,8 +74,6 @@ class Rmgdft(CMakePackage, CudaPackage, ROCmPackage):
     depends_on("hdf5")
     depends_on("cuda", when="+cuda")
     with when("+rocm"):
-        depends_on("rocm-core")
-        depends_on("hip")
         depends_on("hipblas")
         depends_on("hipsolver")
         depends_on("rocblas")
@@ -125,8 +121,6 @@ class Rmgdft(CMakePackage, CudaPackage, ROCmPackage):
         if "+rocm" in spec:
             args.append("-DRMG_HIP_ENABLED=1")
             args.append(self.define("HIP_PATH", spec["hip"].prefix))
-            args.append(self.define("ROCM_ROOT", spec["rocm-core"].prefix))
-            args.append(self.define("ROCM_PATH", spec["rocm-core"].prefix))
         return args
 
     def install(self, spec, prefix):
