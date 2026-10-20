@@ -19,7 +19,7 @@ class Uwtools(PythonPackage):
     url = "https://github.com/ufs-community/uwtools/archive/refs/tags/v2.7.1.tar.gz"
     git = "https://github.com/ufs-community/uwtools.git"
 
-    maintainers("NaureenBharwaniNOAA", "christinaholtNOAA", "elcarpenterNOAA", "maddenp-cu")
+    maintainers("christinaholtNOAA", "elcarpenterNOAA", "maddenp-cu")
 
     license("GPL-2.0-or-later", checked_by="WeirAE")
 
@@ -55,7 +55,7 @@ class Uwtools(PythonPackage):
     depends_on("py-jinja2@3.1")
     depends_on("py-jsonschema@4.18:4.23", when="@2.7:2.10")
     depends_on("py-jsonschema@4.18:4.25", when="@2.11.0")
-    depends_on("py-jsonschema@4.17:4.25", when="@2.12:")
+    depends_on("py-jsonschema@4.17:4.25", when="@2.12:2.13")
     depends_on("py-jsonschema@4.17:4.26", when="@2.14.0:")
     depends_on("py-lxml@5.2", when="@2.7")
     depends_on("py-lxml@5.2:5.4", when="@2.8:2.10")

@@ -11,6 +11,9 @@ concurrency:
   group: prechecks-${{github.ref}}-${{github.event.pull_request.number || github.run_number}}
   cancel-in-progress: true
 
+# Default permissions for this workflow are restrictive; individual jobs can overwrite if they need additional access.
+permissions:
+  contents: read
 
 jobs:
   # Validate that the code can be run on all the Python versions supported by Spack
@@ -26,7 +29,7 @@ jobs:
         pip install -r .github/workflows/requirements/style/requirements.txt
     - name: vermin (Repositories)
       run: |
-        vermin --backport importlib --backport argparse --violations --backport typing -t=3.6- -vvv repos tests
+        vermin --backport importlib --backport argparse --violations --backport typing --eval-annotations -t=3.6- -vvv repos tests
 
   # Run style checks on the files that have been changed
   style:
