@@ -121,6 +121,8 @@ class Rmgdft(CMakePackage, CudaPackage, ROCmPackage):
         if "+rocm" in spec:
             args.append("-DRMG_HIP_ENABLED=1")
             args.append(self.define("HIP_PATH", spec["hip"].prefix))
+            # External HIP may live under <rocm-root>/hip.
+            args.append(self.define("ROCM_PATH", spec["hip"].package.get_paths()["rocm-path"]))
         return args
 
     def install(self, spec, prefix):
